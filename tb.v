@@ -25,7 +25,7 @@ begin
 #1  start = 1;
     opa = 32'd1071;
     opb = 32'd462;
-    #10 $finish;
+    #40 $finish;
 end
 always@(clk) begin
     $display(result);
