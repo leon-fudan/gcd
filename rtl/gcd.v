@@ -56,7 +56,7 @@ always @(posedge clk) begin
         run_reg <= 0;
     else if (init)
         run_reg <= 1;
-    else if (done)
+    else if (done_flag)
         run_reg <= 0;
 end
 

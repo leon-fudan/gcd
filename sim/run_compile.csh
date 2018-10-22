@@ -1,3 +1,6 @@
 #!/bin/tcsh
+mc
 ma vcs/2017.03 
-vcs -kdb -debug_access tb.v
+ma verdi
+setenv TMPDIR /tmp/
+vcs -kdb -lca -debug_access+all  +v2k tb.v
