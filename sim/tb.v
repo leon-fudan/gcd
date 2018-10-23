@@ -1,5 +1,4 @@
 `timescale 1ns/1ps
-`include "gcd.v"
 
 module tb;
 reg clk;
