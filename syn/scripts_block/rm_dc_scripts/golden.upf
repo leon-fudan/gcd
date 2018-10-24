@@ -1,0 +1,558 @@
+#################################################################################
+# Design Compiler Multivoltage UPF File Reference
+# Script: golden.upf
+# Version: N-2017.09 (October 2, 2017)
+# Copyright (C) 2007-2017 Synopsys, Inc. All rights reserved.
+#################################################################################
+
+#################################################################################
+# This UPF template file can be used as a reference to develop a UPF-based
+# low power intent file.
+#
+#  - Example 1: UPF using supply set handles and supply sets.
+#               Supported by default
+#
+#  - Example 2: UPF using domain dependent supply nets.
+#               Variable upf_create_implicit_supply_sets has to set to false to 
+#               use domain dependent supply nets in the design.
+#
+# You can also use Visual UPF to quickly generate a UPF template for your design. 
+# Visual UPF can be invoked using the Power Tab in Design Vision GUI. For details
+# on Visual UPF please refer to the Power Compiler User Guide on SolvNet.
+#################################################################################
+
+#################################################################################
+# Identifiers inside the {} will need to be modified by users to make 
+# this UPF file work for their design. 
+#
+# Users will need to modify these UPF commands to adapt them to their
+# design.
+#
+# For more information on the UPF commands, please refer to the
+# Synopsys Low-Power Flow User Guide. 
+# https://solvnet.synopsys.com/dow_retrieve/G-2012.03/slpfug/slpfug.html
+#################################################################################
+
+
+#################################################################################
+#################################################################################
+# Example 1: UPF using supply set handles and supply sets.
+#################################################################################
+#################################################################################
+
+## Create Power Domains
+#######################
+create_power_domain {TOP}                   \
+  -supply   {extra_supplies ""} 
+
+create_power_domain {LEON3_p0}              \
+  -supply   {extra_supplies ""}             \
+  -elements {u0_0/pd_switchable}
+create_power_domain {LEON3_p1}              \
+  -supply   {extra_supplies ""}             \
+  -elements {u0_1/pd_switchable}
+create_power_domain {LEON3_p2}              \
+  -supply   {extra_supplies_0 TOP.primary } \
+  -elements {u0_2/pd_switchable}
+create_power_domain {LEON3_p3}              \
+  -supply   {extra_supplies_0 TOP.primary } \
+  -elements {u0_3/pd_switchable}
+create_power_domain {LEON3_misc}            \
+  -supply   {extra_supplies ""}             \
+  -elements {u_m/u_m_pd}
+
+## Tie common ground
+####################
+create_supply_net {VSS}
+create_supply_set {SS1}
+create_supply_set {TOP.primary}        -update -function {ground VSS}
+create_supply_set {SS1}                -update -function {ground VSS}
+create_supply_set {LEON3_p0.primary}   -update -function {ground VSS}
+create_supply_set {LEON3_p1.primary}   -update -function {ground VSS}
+create_supply_set {LEON3_p2.primary}   -update -function {ground VSS}
+create_supply_set {LEON3_p3.primary}   -update -function {ground VSS}
+create_supply_set {LEON3_misc.primary} -update -function {ground VSS}
+
+## Supply Set Association
+#########################
+associate_supply_set {TOP.primary} -handle {TOP.default_isolation}
+associate_supply_set {TOP.primary} -handle {LEON3_p0.default_isolation}
+associate_supply_set {TOP.primary} -handle {LEON3_p1.default_isolation}
+associate_supply_set {TOP.primary} -handle {LEON3_misc.default_isolation}
+associate_supply_set {TOP.primary} -handle {LEON3_misc.default_retention}
+associate_supply_set {SS1}         -handle {LEON3_p2.default_isolation}
+associate_supply_set {SS1}         -handle {LEON3_p3.default_isolation}
+
+## Create Power Switches 
+########################
+create_power_switch {leon3_p0_sw}                              \
+  -domain             {LEON3_p0}                               \
+  -input_supply_port  {in TOP.primary.power }                  \
+  -output_supply_port {out LEON3_p0.primary.power }            \
+  -control_port       {p0_sd u_m/u_power_controller_top/p0_sd} \
+  -on_state           {p0_on_state in {!p0_sd}}
+create_power_switch {leon3_p1_sw}                              \
+  -domain             {LEON3_p1}                               \
+  -input_supply_port  {in TOP.primary.power }                  \
+  -output_supply_port {out LEON3_p1.primary.power }            \
+  -control_port       {p1_sd u_m/u_power_controller_top/p1_sd} \
+  -on_state           {p1_on_state in {!p1_sd}}
+create_power_switch {leon3_p2_sw}                              \
+  -domain             {LEON3_p2}                               \
+  -input_supply_port  {in SS1.power }                          \
+  -output_supply_port {out LEON3_p2.primary.power }            \
+  -control_port       {p2_sd u_m/u_power_controller_top/p2_sd} \
+  -on_state           {p2_on_state in {!p2_sd}}
+create_power_switch {leon3_p3_sw}                              \
+  -domain             {LEON3_p3}                               \
+  -input_supply_port  {in SS1.power }                          \
+  -output_supply_port {out LEON3_p3.primary.power }            \
+  -control_port       {p3_sd u_m/u_power_controller_top/p3_sd} \
+  -on_state           {p3_on_state in {!p3_sd}}
+create_power_switch {leon3_misc_sw}                              \
+  -domain             {LEON3_misc}                               \
+  -input_supply_port  {in TOP.primary.power }                    \
+  -output_supply_port {out LEON3_misc.primary.power }            \
+  -control_port       {all_sd u_m/u_power_controller_top/all_sd} \
+  -on_state           {misc_on_state in {!all_sd}}
+
+
+## UPF Power States
+###################
+# Top Supply States
+add_power_state {TOP.primary} \
+  -state {TOP_HV}   {-supply_expr {power == `{FULL_ON, 1.08}}}
+add_power_state {TOP.primary} \
+  -state {GND}      {-supply_expr {ground == `{FULL_ON, 0.0}}}
+
+add_power_state {SS1} \
+  -state {TOP_LV}   {-supply_expr {power == `{FULL_ON, 0.7}}}
+add_power_state {SS1} \
+  -state {GND}      {-supply_expr {ground == `{FULL_ON, 0.0}}}
+
+# Off Supply States 
+add_power_state {LEON3_p0.primary} \
+  -state {P0_HV}    {-supply_expr {power == `{FULL_ON, 1.08}}}
+add_power_state {LEON3_p0.primary} \
+  -state {P0_OFF}   {-supply_expr {power == `{OFF}}}
+add_power_state {LEON3_p0.primary} \
+  -state {GND}      {-supply_expr {ground == `{FULL_ON, 0.0}}}
+
+add_power_state {LEON3_p1.primary} \
+  -state {P1_HV}    {-supply_expr {power == `{FULL_ON, 1.08}}}
+add_power_state {LEON3_p1.primary} \
+  -state {P1_OFF}   {-supply_expr {power == `{OFF}}}
+add_power_state {LEON3_p1.primary} \
+  -state {GND}      {-supply_expr {ground == `{FULL_ON, 0.0}}}
+
+add_power_state {LEON3_p2.primary} \
+  -state {P2_LV}    {-supply_expr {power == `{FULL_ON, 0.7}}}
+add_power_state {LEON3_p2.primary} \
+  -state {P2_OFF}   {-supply_expr {power == `{OFF}}}
+add_power_state {LEON3_p2.primary} \
+  -state {GND}      {-supply_expr {ground == `{FULL_ON, 0.0}}}
+
+add_power_state {LEON3_p3.primary} \
+  -state {P3_LV}    {-supply_expr {power == `{FULL_ON, 0.7}}}
+add_power_state {LEON3_p3.primary} \
+  -state {P3_OFF}   {-supply_expr {power == `{OFF}}}
+add_power_state {LEON3_p3.primary} \
+  -state {GND}      {-supply_expr {ground == `{FULL_ON, 0.0}}}
+
+add_power_state {LEON3_misc.primary} \
+  -state {MISC_HV}  {-supply_expr {power == `{FULL_ON,1.08}}}
+add_power_state {LEON3_misc.primary} \
+  -state {MISC_OFF} {-supply_expr {power == `{OFF}}}
+add_power_state {LEON3_misc.primary} \
+   -state {GND}     {-supply_expr {ground == `{FULL_ON, 0.0}}}
+
+## Create Power State Table
+###########################
+create_pst {LEON3_MP_PST} -supplies \
+{TOP.primary.power SS1.power LEON3_p0.primary.power LEON3_p1.primary.power LEON3_p2.primary.power LEON3_p3.primary.power LEON3_misc.primary.power TOP.primary.ground}
+
+add_pst_state {INIT}          -pst {LEON3_MP_PST} -state {TOP_HV TOP_LV  P0_OFF   P1_OFF    P2_OFF    P3_OFF   MISC_OFF GND}
+add_pst_state {P0_BOOT}       -pst {LEON3_MP_PST} -state {TOP_HV TOP_LV  P0_HV    P1_OFF    P2_OFF    P3_OFF   MISC_OFF GND}
+add_pst_state {P0_P1_BOOT}    -pst {LEON3_MP_PST} -state {TOP_HV TOP_LV  P0_HV    P1_HV     P2_OFF    P3_OFF   MISC_OFF GND}
+add_pst_state {P0_P1_P3_BOOT} -pst {LEON3_MP_PST} -state {TOP_HV TOP_LV  P0_HV    P1_HV     P2_LV     P3_OFF   MISC_OFF GND}
+add_pst_state {ALL_ON}        -pst {LEON3_MP_PST} -state {TOP_HV TOP_LV  P0_HV    P1_HV     P2_LV     P3_LV    MISC_HV  GND}
+add_pst_state {HIGH_PERF}     -pst {LEON3_MP_PST} -state {TOP_HV TOP_LV  P0_HV    P1_HV     P2_OFF    P3_OFF   MISC_HV  GND}
+add_pst_state {LOW_PERF}      -pst {LEON3_MP_PST} -state {TOP_HV TOP_LV  P0_OFF   P1_OFF    P2_LV     P3_LV    MISC_HV  GND}
+add_pst_state {P3_DROWSY}     -pst {LEON3_MP_PST} -state {TOP_HV TOP_LV  P0_OFF   P1_OFF    P2_OFF    P3_LV    MISC_HV  GND}
+add_pst_state {P2_DROWSY}     -pst {LEON3_MP_PST} -state {TOP_HV TOP_LV  P0_OFF   P1_OFF    P2_LV     P3_OFF   MISC_HV  GND}
+add_pst_state {P1_DROWSY}     -pst {LEON3_MP_PST} -state {TOP_HV TOP_LV  P0_HV    P1_OFF    P2_OFF    P3_LV    MISC_HV  GND}
+add_pst_state {P0_DROWSY}     -pst {LEON3_MP_PST} -state {TOP_HV TOP_LV  P0_OFF   P1_HV     P2_OFF    P3_LV    MISC_HV  GND}
+add_pst_state {ULTRA_DROWSY}  -pst {LEON3_MP_PST} -state {TOP_HV TOP_LV  P0_OFF   P1_HV     P2_OFF    P3_OFF   MISC_OFF GND}
+
+## Power Definition for Power Domain LEON3_p0 
+#############################################
+# Note: Source/Sink strategies applies to both by default
+# Define Isolation Constraints
+set_isolation {leon3_p0_iso_out} \
+  -domain           {LEON3_p0}   \
+  -clamp_value      1            \
+  -applies_to       outputs      \
+  -diff_supply_only TRUE
+
+set_isolation_control {leon3_p0_iso_out}                      \
+  -domain           {LEON3_p0}                                \
+  -isolation_signal {u_m/u_power_controller_top/p0_isolation} \
+  -isolation_sense  high                                      \
+  -location         parent
+
+## Power Definition for Power Domain LEON3_p1 
+#############################################
+# Define Isolation Constraints
+set_isolation {leon3_p1_iso_out}    \
+  -domain      {LEON3_p1}           \
+  -clamp_value 1                    \
+  -applies_to  outputs              \
+  -source      {LEON3_p1.primary}   \
+  -sink        {TOP.primary}
+
+set_isolation_control {leon3_p1_iso_out}                      \
+  -domain           {LEON3_p1}                                \
+  -isolation_signal {u_m/u_power_controller_top/p1_isolation} \
+  -isolation_sense  high                                      \
+  -location         self
+
+## Power Definition for Power Domain LEON3_p2
+#############################################
+# Define Isolation Constraints
+set_isolation {leon3_p2_iso_out}  \
+  -domain           {LEON3_p2}    \
+  -clamp_value      1             \
+  -applies_to       outputs       \
+  -diff_supply_only TRUE
+
+set_isolation_control {leon3_p2_iso_out}                      \
+  -domain           {LEON3_p2}                                \
+  -isolation_signal {u_m/u_power_controller_top/p2_isolation} \
+  -isolation_sense  high                                      \
+  -location parent
+
+# Set the level shifter strategy based on LS available in the Library
+set_level_shifter -domain {LEON3_p2} -applies_to inputs  -location self   {u0_2_ls_in}
+set_level_shifter -domain {LEON3_p2} -applies_to outputs -location parent {u0_2_ls_out}
+
+## Power Definition for Power Domain LEON3_p3
+#############################################
+# Define Isolation Constraints
+set_isolation {leon3_p3_iso_out}  \
+  -domain      {LEON3_p3}         \
+  -clamp_value 1                  \
+  -applies_to  outputs            \
+  -source      {LEON3_p3.primary} \
+  -sink        {TOP.primary}
+
+set_isolation_control {leon3_p3_iso_out}                       \
+  -domain            {LEON3_p3}                                \
+  -isolation_signal  {u_m/u_power_controller_top/p3_isolation} \
+  -isolation_sense   high                                      \
+  -location          self
+
+# Set the level shifter strategy based on LS available in the Library
+set_level_shifter -domain {LEON3_p3} -applies_to inputs  -location self   {u0_3_ls_in}
+set_level_shifter -domain {LEON3_p3} -applies_to outputs -location parent {u0_3_ls_out}
+
+## Power Definition for Power Domain LEON3_misc
+###############################################
+# Define Isolation Constraints
+set_isolation {leon3_misc_iso_out}  \
+  -domain      {LEON3_misc}         \
+  -clamp_value 1                    \
+  -applies_to  outputs              \
+  -source      {LEON3_misc.primary} \
+  -sink        {TOP.primary}
+
+set_isolation_control {leon3_misc_iso_out}                       \
+  -domain             {LEON3_misc}                               \
+  -isolation_signal   {u_m/u_power_controller_top/all_isolation} \
+  -isolation_sense    high                                       \
+  -location           self
+
+
+# Define Retention Register Constraint
+set_retention {misc_ret} -domain {LEON3_misc}
+
+set_retention_control {misc_ret}                               \ 
+  -domain         {LEON3_misc}                                 \
+  -save_signal    {u_m/u_power_controller_top/all_save high}   \
+  -restore_signal {u_m/u_power_controller_top/all_restore low}
+
+map_retention_cell {misc_ret}                  \
+  -domain    {LEON3_misc}                      \
+  -lib_cells {RDFFSRX1       RDFFSRASRX1       \
+              RSDFFSRX1      RSDFFSRASRX1      \
+              RDFFSRX2       RDFFSRASRX2       \
+              RSDFFSRX2      RSDFFSRASRX2      \
+              RDFFSRX1_HVT   RDFFSRASRX1_HVT   \
+              RSDFFSRX1_HVT  RSDFFSRASRX1_HVT  \
+              RDFFSRX2_HVT   RDFFSRASRX2_HVT   \
+              RSDFFSRX2_HVT  RSDFFSRASRX2_HVT  \
+              RDFFSRX1_LVT   RDFFSRASRX1_LVT   \
+              RSDFFSRX1_LVT  RSDFFSRASRX1_LVT  \
+              RDFFSRX2_LVT   RDFFSRASRX2_LVT   \
+              RSDFFSRX2_LVT  RSDFFSRASRX2_LVT} 
+
+set_port_attributes -elements {.} -applies_to inputs  -driver_supply   {TOP.primary}
+set_port_attributes -elements {.} -applies_to outputs -receiver_supply {TOP.primary}
+
+
+#################################################################################
+#################################################################################
+# Example 2: UPF using domain dependent supply nets.
+#################################################################################
+#################################################################################
+
+## Create Power Domains
+#######################
+# Power Domains
+create_power_domain {TOP}
+create_power_domain {LEON3_p0}   -elements {u0_0/pd_switchable}
+create_power_domain {LEON3_p1}   -elements {u0_1/pd_switchable}
+create_power_domain {LEON3_p2}   -elements {u0_2/pd_switchable}
+create_power_domain {LEON3_p3}   -elements {u0_3/pd_switchable}
+create_power_domain {LEON3_misc} -elements {u_m/u_m_pd}
+
+
+## Power Supply Network
+#######################
+# Top Level Domain at 1.08V
+create_supply_port {VDD}
+create_supply_net  {VDD} -domain {TOP}
+create_supply_net  {VDD} -domain {LEON3_misc} -reuse
+
+# Processors u0_0 and u0_1 are high performance and need to operate at 1.08V
+create_supply_net {VDD} -domain {LEON3_p0} -reuse
+create_supply_net {VDD} -domain {LEON3_p1} -reuse
+create_supply_net {VDD} -domain {LEON3_p2} -reuse
+create_supply_net {VDD} -domain {LEON3_p3} -reuse
+
+connect_supply_net {VDD} -ports {VDD}
+
+# Top level Low Voltage Port at 0.9V 
+create_supply_port {VDD_LOW}
+create_supply_net  {VDD_LOW} -domain {TOP}
+
+# Processors u0_2 and u0_3 are low performance and need to operate at 0.9V
+create_supply_net  {VDD_LOW} -domain {LEON3_p2} -reuse
+create_supply_net  {VDD_LOW} -domain {LEON3_p3} -reuse
+connect_supply_net {VDD_LOW} -ports  {VDD_LOW}
+
+
+# Create Ground Nets 
+create_supply_port {VSS}
+
+create_supply_net {VSS} -domain {TOP}
+create_supply_net {VSS} -domain {LEON3_p0}   -reuse
+create_supply_net {VSS} -domain {LEON3_p1}   -reuse
+create_supply_net {VSS} -domain {LEON3_p2}   -reuse
+create_supply_net {VSS} -domain {LEON3_p3}   -reuse
+create_supply_net {VSS} -domain {LEON3_misc} -reuse
+
+connect_supply_net {VSS} -ports {VSS}
+
+# Ground Nets for the different domains
+create_supply_net {VDDS_p0}   -domain {LEON3_p0}
+create_supply_net {VDDS_p1}   -domain {LEON3_p1}
+create_supply_net {VDDS_misc} -domain {LEON3_misc}
+
+create_supply_net {VDD_LOWS_p2} -domain {LEON3_p2}
+create_supply_net {VDD_LOWS_p3} -domain {LEON3_p3}
+
+## Setting Power Domain's Primary Supply Nets 
+#############################################
+# Specify the Primary Supply
+set_domain_supply_net {TOP}        -primary_power_net {VDD}         -primary_ground_net {VSS}
+set_domain_supply_net {LEON3_p0}   -primary_power_net {VDDS_p0}     -primary_ground_net {VSS}
+set_domain_supply_net {LEON3_p1}   -primary_power_net {VDDS_p1}     -primary_ground_net {VSS}
+set_domain_supply_net {LEON3_misc} -primary_power_net {VDDS_misc}   -primary_ground_net {VSS}
+set_domain_supply_net {LEON3_p2}   -primary_power_net {VDD_LOWS_p2} -primary_ground_net {VSS}
+set_domain_supply_net {LEON3_p3}   -primary_power_net {VDD_LOWS_p3} -primary_ground_net {VSS}
+
+
+## Power Definition for Power Domain u0_0/LEON3_p0
+##################################################
+# Create Power Switch
+create_power_switch {leon3_p0_sw}                              \
+  -domain             {LEON3_p0}                               \
+  -input_supply_port  {in VDD}                                 \
+  -output_supply_port {out VDDS_p0}                            \
+  -control_port       {p0_sd u_m/u_power_controller_top/p0_sd} \
+  -on_state           {p0_on_state in {!p0_sd}}
+
+# Define Isolation Constraints
+set_isolation {leon3_p0_iso_out}     \
+   -domain               {LEON3_p0}  \
+   -isolation_power_net  {VDD}       \
+   -isolation_ground_net {VSS}       \
+   -clamp_value          1           \
+   -applies_to           outputs
+
+set_isolation_control {leon3_p0_iso_out}                        \
+   -domain            {LEON3_p0}                                \
+   -isolation_signal  {u_m/u_power_controller_top/p0_isolation} \
+   -isolation_sense   high                                      \
+   -location          parent
+
+## Power Definition for Power Domain u0_1/LEON3_p1
+##################################################
+# Create Power Switch
+create_power_switch {leon3_p1_sw}                              \
+  -domain             {LEON3_p1}                               \
+  -input_supply_port  {in VDD}                                 \
+  -output_supply_port {out VDDS_p1}                            \
+  -control_port       {p1_sd u_m/u_power_controller_top/p1_sd} \
+  -on_state           {p1_on_state in {!p1_sd}}
+
+# Define Isolation Constraints
+set_isolation {leon3_p1_iso_out}     \
+   -domain               {LEON3_p1}  \
+   -isolation_power_net  {VDD}       \
+   -isolation_ground_net {VSS}       \
+   -clamp_value          1           \
+   -applies_to           outputs
+
+set_isolation_control {leon3_p1_iso_out}                        \
+   -domain           {LEON3_p1}                                 \
+   -isolation_signal {u_m/u_power_controller_top/p1_isolation}  \
+   -isolation_sense  high                                       \
+   -location         self
+
+
+## Power Definition for Power Domain u0_2/LEON3_p2
+##################################################
+# Create Power Switch
+create_power_switch {leon3_p2_sw}                               \
+  -domain             {LEON3_p2}                                \
+  -input_supply_port  {in VDD_LOW}                              \
+  -output_supply_port {out VDD_LOWS_p2}                         \
+  -control_port       {p2_sd u_m/u_power_controller_top/p2_sd}  \
+  -on_state           {p2_on_state in {!p2_sd}}
+
+# Define Isolation Constraints
+set_isolation {leon3_p2_iso_out}      \
+   -domain                {LEON3_p2}  \
+   -isolation_power_net   {VDD_LOW}   \
+   -isolation_ground_net  {VSS}       \
+   -clamp_value           1           \
+   -applies_to            outputs
+
+set_isolation_control {leon3_p2_iso_out}                        \
+   -domain           {LEON3_p2}                                 \
+   -isolation_signal {u_m/u_power_controller_top/p2_isolation}  \
+   -isolation_sense  high                                       \
+   -location         parent
+
+# Set the level shifter strategy based on LS available in the Library
+set_level_shifter -domain {LEON3_p2} -applies_to inputs  -location self   {u0_2_ls_in}
+set_level_shifter -domain {LEON3_p2} -applies_to outputs -location parent {u0_2_ls_out}
+
+
+## Power Definition for Power Domain u0_3/LEON3_p3
+##################################################
+# Create Power Switch
+create_power_switch {leon3_p3_sw}                               \
+  -domain             {LEON3_p3}                                \
+  -input_supply_port  {in VDD_LOW}                              \
+  -output_supply_port {out VDD_LOWS_p3}                         \
+  -control_port       {p3_sd u_m/u_power_controller_top/p3_sd}  \
+  -on_state           {p3_on_state in {!p3_sd}}
+
+# Define Isolation Constraints
+set_isolation {leon3_p3_iso_out}      \
+   -domain               {LEON3_p3}   \
+   -isolation_power_net  {VDD_LOW}    \
+   -isolation_ground_net {VSS}        \
+   -clamp_value          1            \
+   -applies_to           outputs
+
+set_isolation_control {leon3_p3_iso_out}                        \
+   -domain           {LEON3_p3}                                 \
+   -isolation_signal {u_m/u_power_controller_top/p3_isolation}  \
+   -isolation_sense  high                                       \
+   -location         self
+
+# Set the level shifter strategy based on LS available in the Library
+set_level_shifter -domain {LEON3_p3} -applies_to inputs  -location self   {u0_3_ls_in}
+set_level_shifter -domain {LEON3_p3} -applies_to outputs -location parent {u0_3_ls_out}
+
+## Power Definition for Power Domain LEON3_misc
+###############################################
+# Create Power Switch
+create_power_switch {leon3_misc_sw}                               \
+  -domain             {LEON3_misc}                                \
+  -input_supply_port  {in VDD}                                    \
+  -output_supply_port {out VDDS_misc}                             \
+  -control_port       {all_sd u_m/u_power_controller_top/all_sd}  \
+  -on_state           {misc_on_state in {!all_sd}}
+
+# Define Isolation Constraints
+set_isolation {leon3_misc_iso_out}     \
+   -domain               {LEON3_misc}  \
+   -isolation_power_net  {VDD}         \
+   -isolation_ground_net {VSS}         \
+   -clamp_value          1             \
+   -applies_to           outputs
+
+set_isolation_control {leon3_misc_iso_out}                       \
+   -domain           {LEON3_misc}                                \
+   -isolation_signal {u_m/u_power_controller_top/all_isolation}  \
+   -isolation_sense  high                                        \
+   -location         self
+
+# Define Retention Register Constraint
+set_retention {misc_ret} -domain {LEON3_misc} -retention_power_net {VDD} -retention_ground_net {VSS}
+
+set_retention_control {misc_ret}                                \
+   -domain         {LEON3_misc}                                 \
+   -save_signal    {u_m/u_power_controller_top/all_save high}   \
+   -restore_signal {u_m/u_power_controller_top/all_restore low}
+
+map_retention_cell {misc_ret}                  \
+   -domain {LEON3_misc}                        \
+   -lib_cells {RDFFSRX1      RDFFSRASRX1       \
+               RSDFFSRX1     RSDFFSRASRX1      \
+               RDFFSRX2      RDFFSRASRX2       \
+               RSDFFSRX2     RSDFFSRASRX2      \
+               RDFFSRX1_HVT  RDFFSRASRX1_HVT   \
+               RSDFFSRX1_HVT RSDFFSRASRX1_HVT  \
+               RDFFSRX2_HVT  RDFFSRASRX2_HVT   \
+               RSDFFSRX2_HVT RSDFFSRASRX2_HVT  \
+               RDFFSRX1_LVT  RDFFSRASRX1_LVT   \
+               RSDFFSRX1_LVT RSDFFSRASRX1_LVT  \
+               RDFFSRX2_LVT  RDFFSRASRX2_LVT   \
+               RSDFFSRX2_LVT RSDFFSRASRX2_LVT  } 
+
+## Define Port State for each Domain
+####################################
+add_port_state {VDD}     -state {TOP_HV 1.08}
+add_port_state {VDD_LOW} -state {TOP_LV 0.7}
+add_port_state {VSS}     -state {GND 0.0}
+
+add_port_state {leon3_p0_sw/out}   -state {P0_HV 1.08}    -state {P0_OFF off}
+add_port_state {leon3_p1_sw/out}   -state {P1_HV 1.08}    -state {P1_OFF off}
+add_port_state {leon3_p2_sw/out}   -state {P2_LV 0.7}     -state {P2_OFF off}
+add_port_state {leon3_p3_sw/out}   -state {P3_LV 0.7}     -state {P3_OFF off}
+add_port_state {leon3_misc_sw/out} -state {MISC_HV 1.08}  -state {MISC_OFF off}
+
+## Define the Port State Table for the Entire System
+####################################################
+create_pst {LEON3_MP_PST}                      -supplies {VDD    VDD_LOW  VDDS_p0  VDDS_p1  VDD_LOWS_p2  VDD_LOWS_p3  VDDS_misc  VSS}
+
+add_pst_state {INIT}          -pst {LEON3_MP_PST} -state {TOP_HV  TOP_LV  P0_OFF   P1_OFF   P2_OFF       P3_OFF       MISC_OFF   GND}
+add_pst_state {P0_BOOT}       -pst {LEON3_MP_PST} -state {TOP_HV  TOP_LV  P0_HV    P1_OFF   P2_OFF       P3_OFF       MISC_OFF   GND}
+add_pst_state {P0_P1_BOOT}    -pst {LEON3_MP_PST} -state {TOP_HV  TOP_LV  P0_HV    P1_HV    P2_OFF       P3_OFF       MISC_OFF   GND}
+add_pst_state {P0_P1_P3_BOOT} -pst {LEON3_MP_PST} -state {TOP_HV  TOP_LV  P0_HV    P1_HV    P2_LV        P3_OFF       MISC_OFF   GND}
+add_pst_state {ALL_ON}        -pst {LEON3_MP_PST} -state {TOP_HV  TOP_LV  P0_HV    P1_HV    P2_LV        P3_LV        MISC_HV    GND}
+add_pst_state {HIGH_PERF}     -pst {LEON3_MP_PST} -state {TOP_HV  TOP_LV  P0_HV    P1_HV    P2_OFF       P3_OFF       MISC_HV    GND}
+add_pst_state {LOW_PERF}      -pst {LEON3_MP_PST} -state {TOP_HV  TOP_LV  P0_OFF   P1_OFF   P2_LV        P3_LV        MISC_HV    GND}
+add_pst_state {P3_DROWSY}     -pst {LEON3_MP_PST} -state {TOP_HV  TOP_LV  P0_OFF   P1_OFF   P2_OFF       P3_LV        MISC_HV    GND}
+add_pst_state {P2_DROWSY}     -pst {LEON3_MP_PST} -state {TOP_HV  TOP_LV  P0_OFF   P1_OFF   P2_LV        P3_OFF       MISC_HV    GND}
+add_pst_state {P1_DROWSY}     -pst {LEON3_MP_PST} -state {TOP_HV  TOP_LV  P0_HV    P1_OFF   P2_OFF       P3_LV        MISC_HV    GND}
+add_pst_state {P0_DROWSY}     -pst {LEON3_MP_PST} -state {TOP_HV  TOP_LV  P0_OFF   P1_HV    P2_OFF       P3_LV        MISC_HV    GND}
+add_pst_state {ULTRA_DROWSY}  -pst {LEON3_MP_PST} -state {TOP_HV  TOP_LV  P0_OFF   P1_HV    P2_OFF       P3_OFF       MISC_OFF   GND}
+
+set_port_attributes -elements { . } -attribute related_supply_default_primary true
+

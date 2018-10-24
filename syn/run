@@ -1,0 +1,3 @@
+#!/bin/tcsh
+ma syn/2017.09-SP4
+make syn > /logs/dcrun.log
