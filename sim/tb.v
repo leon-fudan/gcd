@@ -5,11 +5,11 @@ reg clk;
 reg [31:0] opa;
 reg [31:0] opb;
 reg start;
-reg reset;
+reg resetn;
 wire [31:0] result;
 wire done;
 
-gcd gdc1(opa, opb, start, reset, clk, result, done);
+gcd gdc1(opa, opb, start, resetn, clk, result, done);
 
 initial
 begin
@@ -25,13 +25,13 @@ end
 
 initial
 begin
-    reset = 1;
+    resetn = 0;
     start = 0;
-#6  reset = 0;
+#6  resetn = 1;
 #1  start = 1;
     opa = 32'd1071;
     opb = 32'd462;
-    #40 $finish;
+    #400 $finish;
 end
 always@(clk) begin
     $display(result);
