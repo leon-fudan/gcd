@@ -5,11 +5,11 @@ reg clk;
 reg [31:0] opa;
 reg [31:0] opb;
 reg start;
-reg reset;
+reg resetn;
 wire [31:0] result;
 wire done;
 
-gcd gdc1(opa, opb, start, reset, clk, result, done);
+gcd gdc1(opa, opb, start, resetn, clk, result, done);
 
 initial
 begin
@@ -25,15 +25,25 @@ end
 
 initial
 begin
+<<<<<<< HEAD
     $display("simulation start");
-    reset = 1;
+    resetn = 1;
+=======
+    resetn = 0;
+>>>>>>> 2d5e0a47c28d0126ee585a248bd4ff906114ae6a
     start = 0;
-#6  reset = 0;
+#6  resetn = 1;
 #1  start = 1;
+<<<<<<< HEAD
     opa = 32'd1075;
     opb = 32'd255;
     @(done);
     #1 $finish;
+=======
+    opa = 32'd1071;
+    opb = 32'd462;
+    #400 $finish;
+>>>>>>> 2d5e0a47c28d0126ee585a248bd4ff906114ae6a
 end
 always@(clk) begin
     if (done)

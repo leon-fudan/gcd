@@ -1,2 +1,3 @@
 ../tb.v
 ../../rtl/gcd.v
+../../rtl/mod.v
