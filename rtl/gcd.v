@@ -11,15 +11,10 @@ input wire clk;
 output wire [31:0] result;
 output wire done;
 
+reg     [31:0] r;
 
-
-
-
-
-reg     [30:0] r;
-
-reg     [30:0] opa_reg;
-reg     [30:0] opb_reg;
+reg     [31:0] opa_reg;
+reg     [31:0] opb_reg;
 reg     start_reg;
 reg     done_reg;
 reg     run_reg;
