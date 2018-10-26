@@ -152,9 +152,9 @@ task check_gcd;
         @(done);
         @(posedge clk);
         if (result == result_t) 
-            $display("pass: opa=",opa," opb=",opb , " result = ",result, " as expected");
+            $display("Passed: opa = %0d \t opb = %0d \t result = %0d as expected",opa,opb,result);
         else 
-            $display("faill: opa=",opa," opb=",opb , " result = ",result, " Expected result = ", result_t);
+            $display("Error: opa = %0d\topb = %0d\tresult = %0d; Expected result = %0d", opa,opb,result,result_t);
     end
 endtask
 
