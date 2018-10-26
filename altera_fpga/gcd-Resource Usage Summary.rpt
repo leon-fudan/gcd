@@ -1,0 +1,59 @@
+Resource Usage Summary report for gcd
+Fri Oct 26 10:23:07 2018
+Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Analysis & Synthesis Resource Usage Summary
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 2018  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel FPGA IP License Agreement, or other applicable license
+agreement, including, without limitation, that your use is for
+the sole purpose of programming logic devices manufactured by
+Intel and sold by Intel or its authorized distributors.  Please
+refer to the applicable agreement for further details.
+
+
+
++---------------------------------------------------------+
+; Analysis & Synthesis Resource Usage Summary             ;
++---------------------------------------------+-----------+
+; Resource                                    ; Usage     ;
++---------------------------------------------+-----------+
+; Estimate of Logic utilization (ALMs needed) ; 646       ;
+;                                             ;           ;
+; Combinational ALUT usage for logic          ; 1196      ;
+;     -- 7 input functions                    ; 1         ;
+;     -- 6 input functions                    ; 30        ;
+;     -- 5 input functions                    ; 510       ;
+;     -- 4 input functions                    ; 497       ;
+;     -- <=3 input functions                  ; 158       ;
+;                                             ;           ;
+; Dedicated logic registers                   ; 67        ;
+;                                             ;           ;
+; I/O pins                                    ; 100       ;
+;                                             ;           ;
+; Total DSP Blocks                            ; 0         ;
+;                                             ;           ;
+; Maximum fan-out node                        ; clk~input ;
+; Maximum fan-out                             ; 67        ;
+; Total fan-out                               ; 6034      ;
+; Average fan-out                             ; 4.12      ;
++---------------------------------------------+-----------+
+
+
