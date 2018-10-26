@@ -25,29 +25,43 @@ end
 
 initial
 begin
-<<<<<<< HEAD
     $display("simulation start");
-    resetn = 1;
-=======
     resetn = 0;
->>>>>>> 2d5e0a47c28d0126ee585a248bd4ff906114ae6a
     start = 0;
 #6  resetn = 1;
-#1  start = 1;
-<<<<<<< HEAD
-    opa = 32'd1075;
-    opb = 32'd255;
-    @(done);
-    #1 $finish;
-=======
-    opa = 32'd1071;
-    opb = 32'd462;
-    #400 $finish;
->>>>>>> 2d5e0a47c28d0126ee585a248bd4ff906114ae6a
+    check_gcd(102,12,6);
+    check_gcd(18190,13082,2);
+check_gcd(82066,36915,1);
+check_gcd(34456,36928,8);
+check_gcd(76156,1924,4);
+check_gcd(10118,64431,1);
+check_gcd(68490,78579,9);
+check_gcd(65414,95995,1);
+check_gcd(59203,36405,1);
+#1  $finish;
 end
-always@(clk) begin
-    if (done)
-        $display("opa=",opa," opb=",opb,"  result =", result);
-end
+
+task check_gcd;
+    input [31:0] opa_t;
+    input [31:0] opb_t;
+    input [31:0] result_t;
+    begin
+        @(posedge clk);
+        start = 0;
+        @(posedge clk);
+        opa = opa_t;
+        opb = opb_t;
+        start = 1;
+        @(done);
+        @(posedge clk);
+        if (result == result_t) 
+            $display("pass: opa=",opa," opb=",opb , " result = ",result, " as expected");
+        else 
+            $display("faill: opa=",opa," opb=",opb , " result = ",result, " Expected result = ", result_t);
+    end
+endtask
+
+
+
 endmodule
 
