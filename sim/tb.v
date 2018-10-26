@@ -13,8 +13,8 @@ gcd gdc1(opa, opb, start, reset, clk, result, done);
 
 initial
 begin
-        $fsdbDumpfile("tb.fsdb");
-        $fsdbDumpvars;
+        //$fsdbDumpfile("tb.fsdb");
+        //$fsdbDumpvars;
 end
 
 initial
@@ -25,16 +25,19 @@ end
 
 initial
 begin
+    $display("simulation start");
     reset = 1;
     start = 0;
 #6  reset = 0;
 #1  start = 1;
-    opa = 32'd1071;
-    opb = 32'd462;
-    #40 $finish;
+    opa = 32'd1075;
+    opb = 32'd255;
+    @(done);
+    #1 $finish;
 end
 always@(clk) begin
-    $display(result);
+    if (done)
+        $display("opa=",opa," opb=",opb,"  result =", result);
 end
 endmodule
 
