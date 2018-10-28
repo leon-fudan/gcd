@@ -26,15 +26,15 @@ assign result = opa_reg;
 assign done = done_reg;
 
 assign r_is_zero = (r == 0);
-assign done_sig = run_reg & r_is_zero;
 assign init = ({start,start_reg,run_reg} == 3'b100);
+assign done_sig = run_reg & r_is_zero & ~init;
 assign r_run = run_reg;
 
 mod mod1 (clk,resetn,r_run,opa_reg,opb_reg,mod_r,mod_ready);
 
 always@(*) begin
     r = (mod_ready)?mod_r:32'b1;
-    $display("r= ",r);
+    //$display("r= ",r);
 end
 
 
