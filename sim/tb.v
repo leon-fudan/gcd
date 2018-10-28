@@ -13,8 +13,8 @@ gcd gdc1(opa, opb, start, resetn, clk, result, done);
 
 initial
 begin
-        //$fsdbDumpfile("tb.fsdb");
-        //$fsdbDumpvars;
+        $fsdbDumpfile("tb.fsdb");
+        $fsdbDumpvars;
 end
 
 initial
@@ -26,18 +26,19 @@ end
 initial
 begin
     $display("simulation start");
-    resetn = 0;
+    resetn = 1;
+#5  resetn = 0;
     start = 0;
 #6  resetn = 1;
     check_gcd(102,12,6);
     check_gcd(18190,13082,2);
-check_gcd(82066,36915,1);
-check_gcd(34456,36928,8);
-check_gcd(76156,1924,4);
-check_gcd(10118,64431,1);
-check_gcd(68490,78579,9);
-check_gcd(65414,95995,1);
-check_gcd(59203,36405,1);
+    check_gcd(82066,36915,1);
+    check_gcd(34456,36928,8);
+    check_gcd(76156,1924,4);
+    check_gcd(10118,64431,1);
+    check_gcd(68490,78579,9);
+    check_gcd(65414,95995,1);
+    check_gcd(59203,36405,1);
 #1  $finish;
 end
 
@@ -47,11 +48,13 @@ task check_gcd;
     input [31:0] result_t;
     begin
         @(posedge clk);
-        start = 0;
+        #0.001 start = 0;
         @(posedge clk);
+        #0.001 start = 1;
         opa = opa_t;
         opb = opb_t;
-        start = 1;
+        @(posedge clk);
+        @(posedge clk)
         @(done);
         @(posedge clk);
         if (result == result_t) 
