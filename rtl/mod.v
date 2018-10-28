@@ -25,7 +25,7 @@ assign atemp = A_TEMP;
 assign btemp = B_TEMP;
 assign temptemp = temp;
 assign flag1=(B_TEMP>A_TEMP);
-assign flag2=(temp==0);
+assign flag2=(temp==1);
 shl shl1( .a(btemp) , .al(bl) );
 shr shr1( .a(btemp) , .ar(br) );
 shl shl2( .a(temptemp) , .al(templ) );
@@ -72,20 +72,31 @@ always @(posedge clk or negedge resetn) begin
 	  end
 end
 
-always@(state or flag1 or flag2)
+always@(*)
   case(state)
-     s0 : if(run) ns = s1;
-     s1 : ns = s2;
-     s2 : if(flag1)
+     s0 : if(run) 
+            ns = s1;
+        else 
+            ns = s0;
+     s1 : if(~run) ns = s0 ;
+            else ns = s2;
+     s2 : if(~run) 
+            ns = s0 ;
+          else
+          if(flag1)
            ns=s3;
           else 
            ns=s2;
-     s3 : ns=s4;
-     s4 : if(flag2)
-           ns=s5;
+     s3 : if(~run) ns = s0; else ns=s4;
+     s4 : if(~run) 
+            ns = s0 ;
           else
-           ns=s4;  
-     s5 : if (run) ns=s1;
+            if(flag2)
+               ns=s5;
+            else
+               ns=s4;  
+     s5 : if (run) ns=s1; else ns = s0;
+      
      default : ns=s0;
   endcase
   
