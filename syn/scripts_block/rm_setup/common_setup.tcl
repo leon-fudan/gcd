@@ -32,13 +32,10 @@ set HIERARCHICAL_CELLS             "" ;# List of hierarchical block cell instanc
 set ADDITIONAL_SEARCH_PATH        "./inputs ./scripts_block/rm_dc_user_scripts"  ;#  Additional search path to be added to the default search path
 
 set TARGET_LIBRARY_FILES          "
-${DESIGN_REF_DATA_PATH}/library/std/db/ts16ncfslogl20hdl090f_ssgnp0p72vn40c.db
-${DESIGN_REF_DATA_PATH}/library/std/db/ts16ncfllogl20hdl090f_ssgnp0p72vn40c.db
 ${DESIGN_REF_DATA_PATH}/library/std/db/ts16ncfslogl20hdh090f_ssgnp0p72vn40c.db
-${DESIGN_REF_DATA_PATH}/library/std/db/ts16ncfllogl20hdh090f_ssgnp0p72vn40c.db
 "  ;#  Target technology logical libraries
 
-set ADDITIONAL_LINK_LIB_FILES     [glob ${DESIGN_REF_DATA_PATH}/library/mc/db/*/*_ssgnp_ccwt0p72vn40c.db]
+set ADDITIONAL_LINK_LIB_FILES     []
 
 set MIN_LIBRARY_FILES             ""  ;#  List of max min library pairs "max1 min1 max2 min2 max3 min3"...
 
