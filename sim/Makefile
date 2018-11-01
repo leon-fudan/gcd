@@ -1,5 +1,5 @@
 sim:init
-	cd work;../script/run_compile.csh
+	cd work;../script/run_compile.csh;./simv
 init:
 	mkdir -p work
 trace:sim
