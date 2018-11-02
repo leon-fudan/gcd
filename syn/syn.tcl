@@ -1,4 +1,6 @@
 
+set_host_options -max_cores 16
+
 set DESIGN_NAME                   "gcd"  ;#  The name of the top-level design
 set DESIGN_REF_DATA_PATH           "/remote/ailab1/weihang/course/dsp_vsli/gcd"
 set link_library        "
@@ -15,3 +17,5 @@ create_clock -name clk -period 0.5 clk
 set_ideal_network resetn
 check_design
 compile
+report_area > rpts/area.rpt
+report_qor > rpts/qor.rpt
