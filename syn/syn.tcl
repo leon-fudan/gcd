@@ -15,3 +15,5 @@ create_clock -name clk -period 0.5 clk
 set_ideal_network resetn
 check_design
 compile
+report_area > rpts/area.rpt
+report_qor > rpts/qor.rpt
