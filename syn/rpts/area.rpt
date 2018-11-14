@@ -3,29 +3,30 @@
 Report : area
 Design : gcd
 Version: O-2018.06-SP3
-Date   : Wed Oct 31 16:06:41 2018
+Date   : Wed Nov  7 19:13:26 2018
 ****************************************
 
+Information: Updating design information... (UID-85)
 Library(s) Used:
 
-    ts16ncfslogl20hdl090f_ssgnp0p72vn40c (File: /remote/ailab1/weihang/course/dsp_vsli/gcd/syn/library/std/db/ts16ncfslogl20hdl090f_ssgnp0p72vn40c.db)
-    ts16ncfslogl20hdh090f_ssgnp0p72vn40c (File: /remote/ailab1/weihang/course/dsp_vsli/gcd/syn/library/std/db/ts16ncfslogl20hdh090f_ssgnp0p72vn40c.db)
+    ts28nphslogl35hdh140f_ssgwc0p81v125c (File: /remote/ailab1/weihang/course/dsp_vsli/28/gcd_4_stage/syn/library/std/db/ts28nphslogl35hdh140f_ssgwc0p81v125c.db)
+    ts28nphslogl35hdl140f_ssgwc0p81v125c (File: /remote/ailab1/weihang/course/dsp_vsli/28/gcd_4_stage/syn/library/std/db/ts28nphslogl35hdl140f_ssgwc0p81v125c.db)
 
-Number of ports:                          554
-Number of nets:                          1630
-Number of cells:                         1125
-Number of combinational cells:            953
+Number of ports:                          100
+Number of nets:                         10366
+Number of cells:                        10270
+Number of combinational cells:          10104
 Number of sequential cells:               166
 Number of macros/black boxes:               0
-Number of buf/inv:                        283
-Number of references:                      27
+Number of buf/inv:                       2269
+Number of references:                     304
 
-Combinational area:                263.191685
-Buf/Inv area:                       46.707841
-Noncombinational area:             167.857922
+Combinational area:               6799.715981
+Buf/Inv area:                      735.840005
+Noncombinational area:             403.577995
 Macro/Black Box area:                0.000000
 Net Interconnect area:      undefined  (Wire load has zero net area)
 
-Total cell area:                   431.049607
+Total cell area:                  7203.293976
 Total area:                 undefined
 1
