@@ -1,0 +1,54 @@
+ 
+****************************************
+Report : power
+        -analysis_effort low
+Design : gcd
+Version: O-2018.06-SP3
+Date   : Wed Nov  7 22:03:16 2018
+****************************************
+
+
+Library(s) Used:
+
+    ts28nphslogl35hdl140f_ssgwc0p81v125c (File: /remote/ailab1/weihang/course/dsp_vsli/28/gcd_master/syn/library/std/db/ts28nphslogl35hdl140f_ssgwc0p81v125c.db)
+    ts28nphslogl35hdh140f_ssgwc0p81v125c (File: /remote/ailab1/weihang/course/dsp_vsli/28/gcd_master/syn/library/std/db/ts28nphslogl35hdh140f_ssgwc0p81v125c.db)
+
+
+Operating Conditions: SSGWC0P81V125C   Library: ts28nphslogl35hdh140f_ssgwc0p81v125c
+Wire Load Model Mode: enclosed
+
+Design        Wire Load Model            Library
+------------------------------------------------
+gcd                    ZeroWLM           ts28nphslogl35hdh140f_ssgwc0p81v125c
+
+
+Global Operating Voltage = 0.81 
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1nW
+
+
+  Cell Internal Power  =   3.0751 mW   (91%)
+  Net Switching Power  = 303.1251 uW    (9%)
+                         ---------
+Total Dynamic Power    =   3.3782 mW  (100%)
+
+Cell Leakage Power     =  33.8745 uW
+
+
+                 Internal         Switching           Leakage            Total
+Power Group      Power            Power               Power              Power   (   %    )  Attrs
+--------------------------------------------------------------------------------------------------
+io_pad             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+memory             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
+clock_network      0.0000            0.0000            0.0000            0.0000  (   0.00%)
+register           2.7514        5.3872e-02        1.0338e+04            2.8156  (  82.52%)
+sequential         0.0000            0.0000            0.0000            0.0000  (   0.00%)
+combinational      0.3237            0.2493        2.3536e+04            0.5965  (  17.48%)
+--------------------------------------------------------------------------------------------------
+Total              3.0751 mW         0.3031 mW     3.3874e+04 nW         3.4121 mW
+1
