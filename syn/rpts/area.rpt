@@ -3,29 +3,29 @@
 Report : area
 Design : gcd
 Version: O-2018.06-SP3
-Date   : Wed Oct 31 16:06:41 2018
+Date   : Wed Nov  7 21:24:58 2018
 ****************************************
 
+Information: Updating design information... (UID-85)
 Library(s) Used:
 
-    ts16ncfslogl20hdl090f_ssgnp0p72vn40c (File: /remote/ailab1/weihang/course/dsp_vsli/gcd/syn/library/std/db/ts16ncfslogl20hdl090f_ssgnp0p72vn40c.db)
-    ts16ncfslogl20hdh090f_ssgnp0p72vn40c (File: /remote/ailab1/weihang/course/dsp_vsli/gcd/syn/library/std/db/ts16ncfslogl20hdh090f_ssgnp0p72vn40c.db)
+    ts16ncfllogl16hsl096f_ssgnp0p72v125c (File: /remote/ailab1/weihang/course/dsp_vsli/16/gcd_4_stage/syn/library/std/db/ts16ncfllogl16hsl096f_ssgnp0p72v125c.db)
 
-Number of ports:                          554
-Number of nets:                          1630
-Number of cells:                         1125
-Number of combinational cells:            953
+Number of ports:                          100
+Number of nets:                          9748
+Number of cells:                         9634
+Number of combinational cells:           9468
 Number of sequential cells:               166
 Number of macros/black boxes:               0
-Number of buf/inv:                        283
-Number of references:                      27
+Number of buf/inv:                       1995
+Number of references:                     243
 
-Combinational area:                263.191685
-Buf/Inv area:                       46.707841
-Noncombinational area:             167.857922
+Combinational area:               2883.944463
+Buf/Inv area:                      311.915518
+Noncombinational area:             207.986691
 Macro/Black Box area:                0.000000
 Net Interconnect area:      undefined  (Wire load has zero net area)
 
-Total cell area:                   431.049607
+Total cell area:                  3091.931154
 Total area:                 undefined
 1
