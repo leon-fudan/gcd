@@ -1,0 +1,53 @@
+ 
+****************************************
+Report : power
+        -analysis_effort low
+Design : gcd
+Version: O-2018.06-SP3
+Date   : Wed Nov  7 21:34:44 2018
+****************************************
+
+
+Library(s) Used:
+
+    ts16ncfllogl16hsl096f_ssgnp0p72v125c (File: /remote/ailab1/weihang/course/dsp_vsli/16/gcd_direct/syn/library/std/db/ts16ncfllogl16hsl096f_ssgnp0p72v125c.db)
+
+
+Operating Conditions: SSGNP0P72V125C   Library: ts16ncfllogl16hsl096f_ssgnp0p72v125c
+Wire Load Model Mode: enclosed
+
+Design        Wire Load Model            Library
+------------------------------------------------
+gcd                    ZeroWLM           ts16ncfllogl16hsl096f_ssgnp0p72v125c
+
+
+Global Operating Voltage = 0.72 
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1nW
+
+
+  Cell Internal Power  =   2.9047 mW   (49%)
+  Net Switching Power  =   3.0574 mW   (51%)
+                         ---------
+Total Dynamic Power    =   5.9622 mW  (100%)
+
+Cell Leakage Power     = 645.5101 uW
+
+
+                 Internal         Switching           Leakage            Total
+Power Group      Power            Power               Power              Power   (   %    )  Attrs
+--------------------------------------------------------------------------------------------------
+io_pad             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+memory             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
+clock_network      0.0000            0.0000            0.0000            0.0000  (   0.00%)
+register           0.3773        3.7204e-02        4.4808e+03            0.4190  (   6.34%)
+sequential         0.0000            0.0000            0.0000            0.0000  (   0.00%)
+combinational      2.5274            3.0202        6.4103e+05            6.1887  (  93.66%)
+--------------------------------------------------------------------------------------------------
+Total              2.9047 mW         3.0574 mW     6.4551e+05 nW         6.6077 mW
+1
